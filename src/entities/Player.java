@@ -11,27 +11,25 @@ import utilz.LoadSave;
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
-    private int aniTick, aniIndex, aniSpeed = 25;
+    private int aniTick;
+    private int aniIndex;
     private int playerAction = IDLE;
     private boolean moving = false;
     private boolean attacking = false;
     private boolean left, up, right, down, jump;
-    private float playerSpeed = 1.0f * Game.SCALE;
+    private float playerSpeed = Game.SCALE;
     private int[][] lvlData;
-    private float xDrawOffset = 21 * Game.SCALE;
-    private float yDrawOffset = 4 * Game.SCALE;
 
     // Jumping / Gravity
     private float airSpeed = 0f;
-    private float gravity = 0.04f * Game.SCALE;
-    private float jumpSpeed = -2.25f * Game.SCALE;
-    private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+    private final float gravity = 0.04f * Game.SCALE;
+    private final float fallSpeedAfterCollision = 0.5f * Game.SCALE;
     private boolean inAir = false;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
-        initHitbox(x, y, (int) (20 * Game.SCALE), (int) (27 * Game.SCALE));
+        initHitbox(x, y);
     }
 
     public void update() {
@@ -41,11 +39,14 @@ public class Player extends Entity {
     }
 
     public void render(Graphics g) {
+        float xDrawOffset = 21 * Game.SCALE;
+        float yDrawOffset = 4 * Game.SCALE;
         g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width, height, null);
     }
 
     private void updateAnimationTick() {
         aniTick++;
+        int aniSpeed = 25;
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
@@ -115,9 +116,7 @@ public class Player extends Entity {
         }
 
         if (inAir) {
-            if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
-
-            }
+            CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData);
         }
 
 
@@ -127,7 +126,7 @@ public class Player extends Entity {
         if (inAir)
             return;
         inAir = true;
-        airSpeed = jumpSpeed;
+        airSpeed = -2.25f * Game.SCALE;
     }
 
     private void resetInAir() {
