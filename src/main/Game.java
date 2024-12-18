@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.Graphics;
-
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
@@ -14,18 +13,16 @@ public class Game implements Runnable {
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
-    // TODO: create a private field of type Playing named playing.
-    // TODO: create a private field of type Menu named menu
+    private Playing playing;
+    private Menu menu;
 
-
-    // TODO: create public final static fields of the following name and value (these are some extra constants)
-    // TODO: int TILES_DEFAULT_SIZE set to 32
-    // TODO: float SCALE set to 2f
-    // TODO: int TILES_IN_WIDTH set to 26
-    // TODO: int TILES_IN_HEIGHT set to 14
-    // TODO: int TILES_SIZE set to (int) (TILES_DEFAULT_SIZE * SCALE)
-    // TODO: int GAME_WIDTH set to TILES_SIZE * TILES_IN_WIDTH
-    // TODO: int GAME_HEIGHT set to TILES_SIZE * TILE_IN_HEIGHT
+    public final static int TILES_DEFAULT_SIZE = 32;
+    public final static float SCALE = 2f;
+    public final static int TILES_IN_WIDTH = 26;
+    public final static int TILES_IN_HEIGHT = 14;
+    public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     public Game() {
         initClasses();
@@ -39,8 +36,8 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        // TODO: set menu to new Menu passing in this
-        // TODO: set playing to new Playing passing in this
+        menu = new Menu(this);
+        playing = new Playing(this);
     }
 
     private void startGameLoop() {
@@ -51,26 +48,27 @@ public class Game implements Runnable {
     public void update() {
         switch (Gamestate.state) {
             case MENU:
-                // TODO: call menu.update()
+                menu.update();
                 break;
             case PLAYING:
-                // TODO: call playing.update()
+                playing.update();
                 break;
             case OPTIONS:
             case QUIT:
             default:
-                // TODO: call System.exit passing in 0
+                System.exit(0);
                 break;
+
         }
     }
 
     public void render(Graphics g) {
         switch (Gamestate.state) {
             case MENU:
-                // TODO: call menu.draw passing in g
+                menu.draw(g);
                 break;
             case PLAYING:
-                // TODO: call playing.draw passing in g
+                playing.draw(g);
                 break;
             default:
                 break;
@@ -123,8 +121,8 @@ public class Game implements Runnable {
     }
 
     public void windowFocusLost() {
-        // TODO: if Gamestate.state is equal to Gamestate.PLAYING
-        // TODO: call playing.getPlayer().resetDirBoolean()
+        if (Gamestate.state == Gamestate.PLAYING)
+            playing.getPlayer().resetDirBooleans();
     }
 
     public Menu getMenu() {

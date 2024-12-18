@@ -4,14 +4,13 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import entities.player;
+import entities.Player;
 import levels.LevelManager;
 import main.Game;
 
-public class Playing extends State implements Statemethods {
-    // TODO: all fields are private
-    // TODO: create a Player called player
-    // TODO: create a LevelManager called levelManager
+public class Playing extends State implements StateMethods {
+    private Player player;
+    private LevelManager levelManager;
 
     public Playing(Game game) {
         super(game);
@@ -19,27 +18,30 @@ public class Playing extends State implements Statemethods {
     }
 
     private void initClasses() {
-        // TODO: set levelManager to new LevelManager(game)
-        // TODO: set player to new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE)
-        // TODO: call player.loadLvlData(levelManager.getCurrentLevel().getLevelData())
+        levelManager = new LevelManager(game);
+        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
+        player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+
     }
 
     @Override
     public void update() {
-        levelManger.update();
+        levelManager.update();
         player.update();
+
     }
 
     @Override
     public void draw(Graphics g) {
-        levelManger.draw(g);
+        levelManager.draw(g);
         player.render(g);
+
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO: if (e.getButton() is equal to MouseEvent.Button1);
-        player.setAttacking(true);
+        if (e.getButton() == MouseEvent.BUTTON1)
+            player.setAttacking(true);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class Playing extends State implements Statemethods {
         player.resetDirBooleans();
     }
 
-    public player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
